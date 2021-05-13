@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:proyecto_1/Menu_Provider.dart';
 import 'package:proyecto_1/icono_string_util.dart';
-import 'package:proyecto_1/navigation_class/Avatars.dart';
-import 'package:proyecto_1/navigation_class/Targetas.dart';
-
-import 'navigation_class/Alertas.dart';
+import 'main.dart';
 
 class Home_Page extends StatefulWidget {
   @override
@@ -12,34 +9,19 @@ class Home_Page extends StatefulWidget {
 }
 
 class _Home_PageState extends State<Home_Page> {
-int _seleccion=0;
-String mensaje="alertas";
-  _getDrawer_item_widget(int pos, String texto){
-    switch(pos){
-      case 0: return Alertas(texto);
-      case 1: return Avatars(texto);
-      case 2: return Targetas(texto);
-    }
-  }
+bool _seleccion=false;
+
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Proyecto 1',
-      theme: ThemeData(
-          primarySwatch: Colors.amber, accentColor: Colors.amberAccent),
-      home: Scaffold(
+    return Scaffold(
         appBar: AppBar(
           title: Text("Proyecto 1"),
           elevation: 15,
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)),
         ),
-        drawer: Drawer(
-          child: _lista(context),
-        ),
-        body: _getDrawer_item_widget(_seleccion,mensaje),
-      ),
-    );
+        body: _lista(context),
+      );
   }
 
   Widget _lista(BuildContext context) {
@@ -52,18 +34,7 @@ String mensaje="alertas";
   }
 
   List<Widget> _listItems(List<dynamic> data, BuildContext context) {
-    final widgethead=UserAccountsDrawerHeader(
-      accountName: Text("Hinojosa sánchez Javier Alberto"),
-      currentAccountPicture: CircleAvatar(
-        backgroundColor: Colors.white54,
-        child: Text(
-          "H",
-          style: TextStyle(fontSize: 40),
-        ),
-      ), accountEmail: Text("Desarrollo de aplicaciones Moviles"),
-    );
     final List<Widget> opciones = [];
-    opciones..add(widgethead);
     data.forEach((opt) {
       final widgeTemp = ListTile(
         title: Text(opt['texto']),
@@ -79,8 +50,10 @@ String mensaje="alertas";
             builder: (BuildContext context) =>
                 _builpopUpDialog(context, opt['texto']),
           );*/
-          Navigator.of(context).pop();
-          _onSelect(opt['id'], opt['texto']);
+          setState(() {
+            seleccion(context: context,id:opt['id'], text:opt['texto']);
+            _seleccion=true;
+          });
         },
       );
       opciones..add(widgeTemp)..add(Divider());
@@ -107,10 +80,11 @@ String mensaje="alertas";
       ],
     );
   }*/
-  _onSelect(int position, String texto){
-    setState(() {
-      _seleccion=position;
-      mensaje=texto;
-    });
-  }
+
+Widget seleccion({BuildContext context,String id, String text}){
+    Navigator.of(context).pushNamed(id, arguments: SecondPageArguments(name: text));
+}
+
+
+
 }
